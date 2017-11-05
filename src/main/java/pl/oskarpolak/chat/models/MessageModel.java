@@ -3,8 +3,12 @@ package pl.oskarpolak.chat.models;
 import java.io.Serializable;
 
 public class MessageModel implements Serializable {
+    public MessageModel() {
+
+    }
+
     public enum MessageType {
-        MESSAGE(), OPEN_DIALOG();
+        MESSAGE(), OPEN_DIALOG(), CLOSE_WINDOW();
     }
 
     private String context;

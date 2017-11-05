@@ -1,5 +1,6 @@
 package pl.oskarpolak.chat.models;
 
+import javafx.application.Platform;
 import pl.oskarpolak.chat.controllers.MainController;
 
 import javax.websocket.*;
@@ -20,13 +21,14 @@ public class SocketConnector {
     private Session session;
     private List<SocketObserver> socketObservers;
 
+
     private SocketConnector() {
         container = ContainerProvider.getWebSocketContainer();
         socketObservers = new ArrayList<>();
     }
 
     public void connect() {
-        URI uri = URI.create("ws://localhost:8080/chat");
+        URI uri = URI.create("ws://localhost:8050/chat");
         try {
             container.connectToServer(this, uri);
         } catch (DeploymentException e) {
@@ -46,14 +48,17 @@ public class SocketConnector {
     public void sendMessage(String message){
         try {
             session.getBasicRemote().sendText(message);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     @OnMessage
     public void onMessage(Session session, String message){
-        socketObservers.forEach(s -> s.onMessage(message));
+        socketObservers.forEach(s -> Platform.runLater(()->s.onMessage(message)));
+
     }
 
 
